@@ -1,0 +1,3051 @@
+Terminals unused in grammar
+
+   palabraReservada
+   espacio
+   operadorElevado
+   operadorModulo
+   operadorAmpersand
+   operadorOr
+
+
+State 105 conflicts: 2 shift/reduce
+State 136 conflicts: 6 reduce/reduce
+State 186 conflicts: 6 shift/reduce
+State 210 conflicts: 6 reduce/reduce
+State 211 conflicts: 6 reduce/reduce
+
+
+Grammar
+
+    0 $accept: desc_algoritmo $end
+
+    1 desc_algoritmo: algoritmo identificador operadorPuntoComa cabeceraAlgoritmo bloqueAlgoritmo falgoritmo
+
+    2 cabeceraAlgoritmo: defGlobales defAccionesFunciones defVariablesInteraccion comentario
+
+    3 bloqueAlgoritmo: bloque comentario
+
+    4 defGlobales: definicionTipo defGlobales
+    5            | definicionConst defGlobales
+    6            | %empty
+
+    7 defAccionesFunciones: defAccion defAccionesFunciones
+    8                     | defFuncion_d defAccionesFunciones
+    9                     | %empty
+
+   10 bloque: declaraciones instrucciones
+
+   11 declaraciones: definicionTipo declaraciones
+   12              | definicionConst declaraciones
+   13              | definicionVar declaraciones
+   14              | %empty
+
+   15 definicionTipo: tipo listaDefsTipo ftipo
+
+   16 definicionConst: constt listaDefsConstantes fconst
+
+   17 definicionVar: var listaDefsVariables fvar
+
+   18 listaDefsTipo: identificador operadorIgual defTipo operadorPuntoComa listaDefsTipo
+   19              | %empty
+
+   20 expresionT: literalEntero
+   21           | literalCaracter
+
+   22 listaCampos: identificador operadorDefinicionTipo defTipo operadorPuntoComa listaCampos
+   23            | %empty
+
+   24 literal: literalBooleano
+   25        | literalCadena
+   26        | literalCaracter
+   27        | literalEntero
+   28        | literalReal
+
+   29 literalNumerico: literalEntero
+   30                | literalReal
+
+   31 listaDefsConstantes: identificador operadorIgual literal operadorPuntoComa listaDefsConstantes
+   32                    | %empty
+
+   33 listaDefsVariables: listaId operadorPuntoComa listaDefsVariables
+   34                   | %empty
+
+   35 defTipo: tupla listaCampos ftupla
+   36        | tabla operadorInicioArray expresionT operadorSubRango expresionT operadorFinArray de defTipo
+   37        | identificador
+   38        | expresionT operadorSubRango expresionT
+   39        | ref defTipo
+   40        | entero
+   41        | booleano
+   42        | real
+   43        | caracter
+   44        | cadena
+
+   45 listaId: identificador operadorComa listaId
+   46        | identificador operadorDefinicionTipo defTipo
+
+   47 defVariablesInteraccion: defEntrada
+   48                        | defEntrada defSalida
+   49                        | defSalida
+
+   50 defEntrada: ent listaDefsVariables
+
+   51 defSalida: sal listaDefsVariables
+
+   52 expresion: expArit
+   53          | expBool
+   54          | llamadaFuncion
+
+   55 expArit: expArit operadorMas expArit
+   56        | expArit operadorMenos expArit
+   57        | expArit operadorPor expArit
+   58        | expArit operadorDivisor expArit
+   59        | expArit divv expArit
+   60        | expArit mod expArit
+   61        | operadorInicioParentesis expArit operadorFinParentesis
+   62        | operando
+   63        | operadorMenos expArit
+   64        | operadorMas expArit
+   65        | literalNumerico
+
+   66 operando: identificador
+   67         | operando operadorPunto operando
+   68         | operando operadorInicioArray expresion operadorFinArray
+   69         | operando ref
+
+   70 expBool: expBool y M expBool
+   71        | expBool o M expBool
+   72        | no expBool
+   73        | literalBooleano
+   74        | expresion oprel expresion
+   75        | operadorInicioParentesis expBool operadorFinParentesis
+
+   76 oprel: operadorMayor
+   77      | operadorMenor
+   78      | operadorMayorIgual
+   79      | operadorMenorIgual
+   80      | operadorComparador
+   81      | operadorDistinto
+
+   82 instrucciones: instruccion operadorPuntoComa instrucciones
+   83              | instruccion
+
+   84 instruccion: continuar
+   85            | asignacion
+   86            | alternativa
+   87            | iteracion
+   88            | llamadaAccion
+
+   89 asignacion: operando operadorAsignar expresion
+
+   90 alternativa: si expresion operadorEntonces M instrucciones N listaOpciones fsi
+   91            | si expresion operadorEntonces M instrucciones fsi
+
+   92 listaOpciones: operadorSiNoSi expresion operadorEntonces M instrucciones N listaOpciones
+   93              | operadorSiNoSi expresion operadorEntonces M instrucciones
+
+   94 iteracion: itCotaFija
+   95          | itCotaVariable
+
+   96 itCotaVariable: mientras M expresion hacer M instrucciones fmientras
+
+   97 itCotaFija: para identificador operadorAsignar expresion hasta expresion hacer instrucciones fpara
+
+   98 defAccion: accion cabeceraAccion bloque faccion
+
+   99 defFuncion_d: funcion cabeceraFuncion bloque dev expresion ffuncion
+
+  100 cabeceraAccion: identificador operadorInicioParentesis defParForm operadorFinParentesis operadorPuntoComa
+
+  101 cabeceraFuncion: identificador operadorInicioParentesis listaDefsVariables operadorFinParentesis dev tipoBase operadorPuntoComa
+
+  102 defParForm: dParForm operadorPuntoComa defParForm
+  103           | dParForm
+  104           | %empty
+
+  105 dParForm: ent listaId
+  106         | sal listaId
+  107         | es listaId
+
+  108 llamadaAccion: identificador operadorInicioParentesis parametrosReales operadorFinParentesis
+
+  109 llamadaFuncion: identificador operadorInicioParentesis parametrosReales operadorFinParentesis
+
+  110 parametrosReales: expresion operadorComa parametrosReales
+  111                 | expresion
+  112                 | %empty
+
+  113 M: %empty
+
+  114 N: %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+accion (258) 98
+algoritmo (259) 1
+tipoBase (260) 101
+identificador (261) 1 18 22 31 37 45 46 66 97 100 101 108 109
+literalEntero (262) 20 27 29
+literalCaracter (263) 21 26
+literalBooleano (264) 24 73
+palabraReservada (265)
+literalCadena (266) 25
+literalReal (267) 28 30
+espacio (268)
+o (269) 71
+y (270) 70
+no (271) 72
+comentario (272) 2 3
+booleano (273) 41
+cadena (274) 44
+caracter (275) 43
+constt (276) 16
+continuar (277) 84
+de (278) 36
+dev (279) 99 101
+divv (280) 59
+ent (281) 50 105
+entero (282) 40
+es (283) 107
+faccion (284) 98
+falgoritmo (285) 1
+fconst (286) 16
+ffuncion (287) 99
+fmientras (288) 96
+fpara (289) 97
+fsi (290) 90 91
+ftipo (291) 15
+ftupla (292) 35
+funcion (293) 99
+fvar (294) 17
+hacer (295) 96 97
+hasta (296) 97
+mientras (297) 96
+mod (298) 60
+para (299) 97
+real (300) 42
+ref (301) 39 69
+sal (302) 51 106
+si (303) 90 91
+tabla (304) 36
+tipo (305) 15
+tupla (306) 35
+var (307) 17
+operadorAsignar (308) 89 97
+operadorPuntoComa (309) 1 18 22 31 33 82 100 101 102
+operadorComa (310) 45 110
+operadorSubRango (311) 36 38
+operadorDefinicionTipo (312) 22 46
+operadorEntonces (313) 90 91 92 93
+operadorInicioArray (314) 36 68
+operadorFinArray (315) 36 68
+operadorIgual (316) 18 31
+operadorSiNoSi (317) 92 93
+operadorInicioParentesis (318) 61 75 100 101 108 109
+operadorFinParentesis (319) 61 75 100 101 108 109
+operadorMas (320) 55 64
+operadorPor (321) 57
+operadorElevado (322)
+operadorDivisor (323) 58
+operadorModulo (324)
+operadorMenos (325) 56 63
+operadorMayor (326) 76
+operadorMenor (327) 77
+operadorMayorIgual (328) 78
+operadorMenorIgual (329) 79
+operadorComparador (330) 80
+operadorDistinto (331) 81
+operadorAmpersand (332)
+operadorOr (333)
+operadorPunto (334) 67
+menosu (335)
+masu (336)
+
+
+Nonterminals, with rules where they appear
+
+$accept (82)
+    on left: 0
+desc_algoritmo (83)
+    on left: 1, on right: 0
+cabeceraAlgoritmo (84)
+    on left: 2, on right: 1
+bloqueAlgoritmo (85)
+    on left: 3, on right: 1
+defGlobales (86)
+    on left: 4 5 6, on right: 2 4 5
+defAccionesFunciones (87)
+    on left: 7 8 9, on right: 2 7 8
+bloque (88)
+    on left: 10, on right: 3 98 99
+declaraciones (89)
+    on left: 11 12 13 14, on right: 10 11 12 13
+definicionTipo (90)
+    on left: 15, on right: 4 11
+definicionConst (91)
+    on left: 16, on right: 5 12
+definicionVar (92)
+    on left: 17, on right: 13
+listaDefsTipo (93)
+    on left: 18 19, on right: 15 18
+expresionT (94)
+    on left: 20 21, on right: 36 38
+listaCampos (95)
+    on left: 22 23, on right: 22 35
+literal (96)
+    on left: 24 25 26 27 28, on right: 31
+literalNumerico (97)
+    on left: 29 30, on right: 65
+listaDefsConstantes (98)
+    on left: 31 32, on right: 16 31
+listaDefsVariables (99)
+    on left: 33 34, on right: 17 33 50 51 101
+defTipo (100)
+    on left: 35 36 37 38 39 40 41 42 43 44, on right: 18 22 36 39 46
+listaId (101)
+    on left: 45 46, on right: 33 45 105 106 107
+defVariablesInteraccion (102)
+    on left: 47 48 49, on right: 2
+defEntrada (103)
+    on left: 50, on right: 47 48
+defSalida (104)
+    on left: 51, on right: 48 49
+expresion (105)
+    on left: 52 53 54, on right: 68 74 89 90 91 92 93 96 97 99 110
+    111
+expArit (106)
+    on left: 55 56 57 58 59 60 61 62 63 64 65, on right: 52 55 56 57
+    58 59 60 61 63 64
+operando (107)
+    on left: 66 67 68 69, on right: 62 67 68 69 89
+expBool (108)
+    on left: 70 71 72 73 74 75, on right: 53 70 71 72 75
+oprel (109)
+    on left: 76 77 78 79 80 81, on right: 74
+instrucciones (110)
+    on left: 82 83, on right: 10 82 90 91 92 93 96 97
+instruccion (111)
+    on left: 84 85 86 87 88, on right: 82 83
+asignacion (112)
+    on left: 89, on right: 85
+alternativa (113)
+    on left: 90 91, on right: 86
+listaOpciones (114)
+    on left: 92 93, on right: 90 92
+iteracion (115)
+    on left: 94 95, on right: 87
+itCotaVariable (116)
+    on left: 96, on right: 95
+itCotaFija (117)
+    on left: 97, on right: 94
+defAccion (118)
+    on left: 98, on right: 7
+defFuncion_d (119)
+    on left: 99, on right: 8
+cabeceraAccion (120)
+    on left: 100, on right: 98
+cabeceraFuncion (121)
+    on left: 101, on right: 99
+defParForm (122)
+    on left: 102 103 104, on right: 100 102
+dParForm (123)
+    on left: 105 106 107, on right: 102 103
+llamadaAccion (124)
+    on left: 108, on right: 88
+llamadaFuncion (125)
+    on left: 109, on right: 54
+parametrosReales (126)
+    on left: 110 111 112, on right: 108 109 110
+M (127)
+    on left: 113, on right: 70 71 90 91 92 93 96
+N (128)
+    on left: 114, on right: 90 92
+
+
+State 0
+
+    0 $accept: . desc_algoritmo $end
+
+    algoritmo  shift, and go to state 1
+
+    desc_algoritmo  go to state 2
+
+
+State 1
+
+    1 desc_algoritmo: algoritmo . identificador operadorPuntoComa cabeceraAlgoritmo bloqueAlgoritmo falgoritmo
+
+    identificador  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: desc_algoritmo . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    1 desc_algoritmo: algoritmo identificador . operadorPuntoComa cabeceraAlgoritmo bloqueAlgoritmo falgoritmo
+
+    operadorPuntoComa  shift, and go to state 5
+
+
+State 4
+
+    0 $accept: desc_algoritmo $end .
+
+    $default  accept
+
+
+State 5
+
+    1 desc_algoritmo: algoritmo identificador operadorPuntoComa . cabeceraAlgoritmo bloqueAlgoritmo falgoritmo
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+
+    $default  reduce using rule 6 (defGlobales)
+
+    cabeceraAlgoritmo  go to state 8
+    defGlobales        go to state 9
+    definicionTipo     go to state 10
+    definicionConst    go to state 11
+
+
+State 6
+
+   16 definicionConst: constt . listaDefsConstantes fconst
+
+    identificador  shift, and go to state 12
+
+    $default  reduce using rule 32 (listaDefsConstantes)
+
+    listaDefsConstantes  go to state 13
+
+
+State 7
+
+   15 definicionTipo: tipo . listaDefsTipo ftipo
+
+    identificador  shift, and go to state 14
+
+    $default  reduce using rule 19 (listaDefsTipo)
+
+    listaDefsTipo  go to state 15
+
+
+State 8
+
+    1 desc_algoritmo: algoritmo identificador operadorPuntoComa cabeceraAlgoritmo . bloqueAlgoritmo falgoritmo
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+    var     shift, and go to state 16
+
+    $default  reduce using rule 14 (declaraciones)
+
+    bloqueAlgoritmo  go to state 17
+    bloque           go to state 18
+    declaraciones    go to state 19
+    definicionTipo   go to state 20
+    definicionConst  go to state 21
+    definicionVar    go to state 22
+
+
+State 9
+
+    2 cabeceraAlgoritmo: defGlobales . defAccionesFunciones defVariablesInteraccion comentario
+
+    accion   shift, and go to state 23
+    funcion  shift, and go to state 24
+
+    $default  reduce using rule 9 (defAccionesFunciones)
+
+    defAccionesFunciones  go to state 25
+    defAccion             go to state 26
+    defFuncion_d          go to state 27
+
+
+State 10
+
+    4 defGlobales: definicionTipo . defGlobales
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+
+    $default  reduce using rule 6 (defGlobales)
+
+    defGlobales      go to state 28
+    definicionTipo   go to state 10
+    definicionConst  go to state 11
+
+
+State 11
+
+    5 defGlobales: definicionConst . defGlobales
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+
+    $default  reduce using rule 6 (defGlobales)
+
+    defGlobales      go to state 29
+    definicionTipo   go to state 10
+    definicionConst  go to state 11
+
+
+State 12
+
+   31 listaDefsConstantes: identificador . operadorIgual literal operadorPuntoComa listaDefsConstantes
+
+    operadorIgual  shift, and go to state 30
+
+
+State 13
+
+   16 definicionConst: constt listaDefsConstantes . fconst
+
+    fconst  shift, and go to state 31
+
+
+State 14
+
+   18 listaDefsTipo: identificador . operadorIgual defTipo operadorPuntoComa listaDefsTipo
+
+    operadorIgual  shift, and go to state 32
+
+
+State 15
+
+   15 definicionTipo: tipo listaDefsTipo . ftipo
+
+    ftipo  shift, and go to state 33
+
+
+State 16
+
+   17 definicionVar: var . listaDefsVariables fvar
+
+    identificador  shift, and go to state 34
+
+    $default  reduce using rule 34 (listaDefsVariables)
+
+    listaDefsVariables  go to state 35
+    listaId             go to state 36
+
+
+State 17
+
+    1 desc_algoritmo: algoritmo identificador operadorPuntoComa cabeceraAlgoritmo bloqueAlgoritmo . falgoritmo
+
+    falgoritmo  shift, and go to state 37
+
+
+State 18
+
+    3 bloqueAlgoritmo: bloque . comentario
+
+    comentario  shift, and go to state 38
+
+
+State 19
+
+   10 bloque: declaraciones . instrucciones
+
+    identificador  shift, and go to state 39
+    continuar      shift, and go to state 40
+    mientras       shift, and go to state 41
+    para           shift, and go to state 42
+    si             shift, and go to state 43
+
+    operando        go to state 44
+    instrucciones   go to state 45
+    instruccion     go to state 46
+    asignacion      go to state 47
+    alternativa     go to state 48
+    iteracion       go to state 49
+    itCotaVariable  go to state 50
+    itCotaFija      go to state 51
+    llamadaAccion   go to state 52
+
+
+State 20
+
+   11 declaraciones: definicionTipo . declaraciones
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+    var     shift, and go to state 16
+
+    $default  reduce using rule 14 (declaraciones)
+
+    declaraciones    go to state 53
+    definicionTipo   go to state 20
+    definicionConst  go to state 21
+    definicionVar    go to state 22
+
+
+State 21
+
+   12 declaraciones: definicionConst . declaraciones
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+    var     shift, and go to state 16
+
+    $default  reduce using rule 14 (declaraciones)
+
+    declaraciones    go to state 54
+    definicionTipo   go to state 20
+    definicionConst  go to state 21
+    definicionVar    go to state 22
+
+
+State 22
+
+   13 declaraciones: definicionVar . declaraciones
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+    var     shift, and go to state 16
+
+    $default  reduce using rule 14 (declaraciones)
+
+    declaraciones    go to state 55
+    definicionTipo   go to state 20
+    definicionConst  go to state 21
+    definicionVar    go to state 22
+
+
+State 23
+
+   98 defAccion: accion . cabeceraAccion bloque faccion
+
+    identificador  shift, and go to state 56
+
+    cabeceraAccion  go to state 57
+
+
+State 24
+
+   99 defFuncion_d: funcion . cabeceraFuncion bloque dev expresion ffuncion
+
+    identificador  shift, and go to state 58
+
+    cabeceraFuncion  go to state 59
+
+
+State 25
+
+    2 cabeceraAlgoritmo: defGlobales defAccionesFunciones . defVariablesInteraccion comentario
+
+    ent  shift, and go to state 60
+    sal  shift, and go to state 61
+
+    defVariablesInteraccion  go to state 62
+    defEntrada               go to state 63
+    defSalida                go to state 64
+
+
+State 26
+
+    7 defAccionesFunciones: defAccion . defAccionesFunciones
+
+    accion   shift, and go to state 23
+    funcion  shift, and go to state 24
+
+    $default  reduce using rule 9 (defAccionesFunciones)
+
+    defAccionesFunciones  go to state 65
+    defAccion             go to state 26
+    defFuncion_d          go to state 27
+
+
+State 27
+
+    8 defAccionesFunciones: defFuncion_d . defAccionesFunciones
+
+    accion   shift, and go to state 23
+    funcion  shift, and go to state 24
+
+    $default  reduce using rule 9 (defAccionesFunciones)
+
+    defAccionesFunciones  go to state 66
+    defAccion             go to state 26
+    defFuncion_d          go to state 27
+
+
+State 28
+
+    4 defGlobales: definicionTipo defGlobales .
+
+    $default  reduce using rule 4 (defGlobales)
+
+
+State 29
+
+    5 defGlobales: definicionConst defGlobales .
+
+    $default  reduce using rule 5 (defGlobales)
+
+
+State 30
+
+   31 listaDefsConstantes: identificador operadorIgual . literal operadorPuntoComa listaDefsConstantes
+
+    literalEntero    shift, and go to state 67
+    literalCaracter  shift, and go to state 68
+    literalBooleano  shift, and go to state 69
+    literalCadena    shift, and go to state 70
+    literalReal      shift, and go to state 71
+
+    literal  go to state 72
+
+
+State 31
+
+   16 definicionConst: constt listaDefsConstantes fconst .
+
+    $default  reduce using rule 16 (definicionConst)
+
+
+State 32
+
+   18 listaDefsTipo: identificador operadorIgual . defTipo operadorPuntoComa listaDefsTipo
+
+    identificador    shift, and go to state 73
+    literalEntero    shift, and go to state 74
+    literalCaracter  shift, and go to state 75
+    booleano         shift, and go to state 76
+    cadena           shift, and go to state 77
+    caracter         shift, and go to state 78
+    entero           shift, and go to state 79
+    real             shift, and go to state 80
+    ref              shift, and go to state 81
+    tabla            shift, and go to state 82
+    tupla            shift, and go to state 83
+
+    expresionT  go to state 84
+    defTipo     go to state 85
+
+
+State 33
+
+   15 definicionTipo: tipo listaDefsTipo ftipo .
+
+    $default  reduce using rule 15 (definicionTipo)
+
+
+State 34
+
+   45 listaId: identificador . operadorComa listaId
+   46        | identificador . operadorDefinicionTipo defTipo
+
+    operadorComa            shift, and go to state 86
+    operadorDefinicionTipo  shift, and go to state 87
+
+
+State 35
+
+   17 definicionVar: var listaDefsVariables . fvar
+
+    fvar  shift, and go to state 88
+
+
+State 36
+
+   33 listaDefsVariables: listaId . operadorPuntoComa listaDefsVariables
+
+    operadorPuntoComa  shift, and go to state 89
+
+
+State 37
+
+    1 desc_algoritmo: algoritmo identificador operadorPuntoComa cabeceraAlgoritmo bloqueAlgoritmo falgoritmo .
+
+    $default  reduce using rule 1 (desc_algoritmo)
+
+
+State 38
+
+    3 bloqueAlgoritmo: bloque comentario .
+
+    $default  reduce using rule 3 (bloqueAlgoritmo)
+
+
+State 39
+
+   66 operando: identificador .
+  108 llamadaAccion: identificador . operadorInicioParentesis parametrosReales operadorFinParentesis
+
+    operadorInicioParentesis  shift, and go to state 90
+
+    $default  reduce using rule 66 (operando)
+
+
+State 40
+
+   84 instruccion: continuar .
+
+    $default  reduce using rule 84 (instruccion)
+
+
+State 41
+
+   96 itCotaVariable: mientras . M expresion hacer M instrucciones fmientras
+
+    $default  reduce using rule 113 (M)
+
+    M  go to state 91
+
+
+State 42
+
+   97 itCotaFija: para . identificador operadorAsignar expresion hasta expresion hacer instrucciones fpara
+
+    identificador  shift, and go to state 92
+
+
+State 43
+
+   90 alternativa: si . expresion operadorEntonces M instrucciones N listaOpciones fsi
+   91            | si . expresion operadorEntonces M instrucciones fsi
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 102
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 44
+
+   67 operando: operando . operadorPunto operando
+   68         | operando . operadorInicioArray expresion operadorFinArray
+   69         | operando . ref
+   89 asignacion: operando . operadorAsignar expresion
+
+    ref                  shift, and go to state 107
+    operadorAsignar      shift, and go to state 108
+    operadorInicioArray  shift, and go to state 109
+    operadorPunto        shift, and go to state 110
+
+
+State 45
+
+   10 bloque: declaraciones instrucciones .
+
+    $default  reduce using rule 10 (bloque)
+
+
+State 46
+
+   82 instrucciones: instruccion . operadorPuntoComa instrucciones
+   83              | instruccion .
+
+    operadorPuntoComa  shift, and go to state 111
+
+    $default  reduce using rule 83 (instrucciones)
+
+
+State 47
+
+   85 instruccion: asignacion .
+
+    $default  reduce using rule 85 (instruccion)
+
+
+State 48
+
+   86 instruccion: alternativa .
+
+    $default  reduce using rule 86 (instruccion)
+
+
+State 49
+
+   87 instruccion: iteracion .
+
+    $default  reduce using rule 87 (instruccion)
+
+
+State 50
+
+   95 iteracion: itCotaVariable .
+
+    $default  reduce using rule 95 (iteracion)
+
+
+State 51
+
+   94 iteracion: itCotaFija .
+
+    $default  reduce using rule 94 (iteracion)
+
+
+State 52
+
+   88 instruccion: llamadaAccion .
+
+    $default  reduce using rule 88 (instruccion)
+
+
+State 53
+
+   11 declaraciones: definicionTipo declaraciones .
+
+    $default  reduce using rule 11 (declaraciones)
+
+
+State 54
+
+   12 declaraciones: definicionConst declaraciones .
+
+    $default  reduce using rule 12 (declaraciones)
+
+
+State 55
+
+   13 declaraciones: definicionVar declaraciones .
+
+    $default  reduce using rule 13 (declaraciones)
+
+
+State 56
+
+  100 cabeceraAccion: identificador . operadorInicioParentesis defParForm operadorFinParentesis operadorPuntoComa
+
+    operadorInicioParentesis  shift, and go to state 112
+
+
+State 57
+
+   98 defAccion: accion cabeceraAccion . bloque faccion
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+    var     shift, and go to state 16
+
+    $default  reduce using rule 14 (declaraciones)
+
+    bloque           go to state 113
+    declaraciones    go to state 19
+    definicionTipo   go to state 20
+    definicionConst  go to state 21
+    definicionVar    go to state 22
+
+
+State 58
+
+  101 cabeceraFuncion: identificador . operadorInicioParentesis listaDefsVariables operadorFinParentesis dev tipoBase operadorPuntoComa
+
+    operadorInicioParentesis  shift, and go to state 114
+
+
+State 59
+
+   99 defFuncion_d: funcion cabeceraFuncion . bloque dev expresion ffuncion
+
+    constt  shift, and go to state 6
+    tipo    shift, and go to state 7
+    var     shift, and go to state 16
+
+    $default  reduce using rule 14 (declaraciones)
+
+    bloque           go to state 115
+    declaraciones    go to state 19
+    definicionTipo   go to state 20
+    definicionConst  go to state 21
+    definicionVar    go to state 22
+
+
+State 60
+
+   50 defEntrada: ent . listaDefsVariables
+
+    identificador  shift, and go to state 34
+
+    $default  reduce using rule 34 (listaDefsVariables)
+
+    listaDefsVariables  go to state 116
+    listaId             go to state 36
+
+
+State 61
+
+   51 defSalida: sal . listaDefsVariables
+
+    identificador  shift, and go to state 34
+
+    $default  reduce using rule 34 (listaDefsVariables)
+
+    listaDefsVariables  go to state 117
+    listaId             go to state 36
+
+
+State 62
+
+    2 cabeceraAlgoritmo: defGlobales defAccionesFunciones defVariablesInteraccion . comentario
+
+    comentario  shift, and go to state 118
+
+
+State 63
+
+   47 defVariablesInteraccion: defEntrada .
+   48                        | defEntrada . defSalida
+
+    sal  shift, and go to state 61
+
+    $default  reduce using rule 47 (defVariablesInteraccion)
+
+    defSalida  go to state 119
+
+
+State 64
+
+   49 defVariablesInteraccion: defSalida .
+
+    $default  reduce using rule 49 (defVariablesInteraccion)
+
+
+State 65
+
+    7 defAccionesFunciones: defAccion defAccionesFunciones .
+
+    $default  reduce using rule 7 (defAccionesFunciones)
+
+
+State 66
+
+    8 defAccionesFunciones: defFuncion_d defAccionesFunciones .
+
+    $default  reduce using rule 8 (defAccionesFunciones)
+
+
+State 67
+
+   27 literal: literalEntero .
+
+    $default  reduce using rule 27 (literal)
+
+
+State 68
+
+   26 literal: literalCaracter .
+
+    $default  reduce using rule 26 (literal)
+
+
+State 69
+
+   24 literal: literalBooleano .
+
+    $default  reduce using rule 24 (literal)
+
+
+State 70
+
+   25 literal: literalCadena .
+
+    $default  reduce using rule 25 (literal)
+
+
+State 71
+
+   28 literal: literalReal .
+
+    $default  reduce using rule 28 (literal)
+
+
+State 72
+
+   31 listaDefsConstantes: identificador operadorIgual literal . operadorPuntoComa listaDefsConstantes
+
+    operadorPuntoComa  shift, and go to state 120
+
+
+State 73
+
+   37 defTipo: identificador .
+
+    $default  reduce using rule 37 (defTipo)
+
+
+State 74
+
+   20 expresionT: literalEntero .
+
+    $default  reduce using rule 20 (expresionT)
+
+
+State 75
+
+   21 expresionT: literalCaracter .
+
+    $default  reduce using rule 21 (expresionT)
+
+
+State 76
+
+   41 defTipo: booleano .
+
+    $default  reduce using rule 41 (defTipo)
+
+
+State 77
+
+   44 defTipo: cadena .
+
+    $default  reduce using rule 44 (defTipo)
+
+
+State 78
+
+   43 defTipo: caracter .
+
+    $default  reduce using rule 43 (defTipo)
+
+
+State 79
+
+   40 defTipo: entero .
+
+    $default  reduce using rule 40 (defTipo)
+
+
+State 80
+
+   42 defTipo: real .
+
+    $default  reduce using rule 42 (defTipo)
+
+
+State 81
+
+   39 defTipo: ref . defTipo
+
+    identificador    shift, and go to state 73
+    literalEntero    shift, and go to state 74
+    literalCaracter  shift, and go to state 75
+    booleano         shift, and go to state 76
+    cadena           shift, and go to state 77
+    caracter         shift, and go to state 78
+    entero           shift, and go to state 79
+    real             shift, and go to state 80
+    ref              shift, and go to state 81
+    tabla            shift, and go to state 82
+    tupla            shift, and go to state 83
+
+    expresionT  go to state 84
+    defTipo     go to state 121
+
+
+State 82
+
+   36 defTipo: tabla . operadorInicioArray expresionT operadorSubRango expresionT operadorFinArray de defTipo
+
+    operadorInicioArray  shift, and go to state 122
+
+
+State 83
+
+   35 defTipo: tupla . listaCampos ftupla
+
+    identificador  shift, and go to state 123
+
+    $default  reduce using rule 23 (listaCampos)
+
+    listaCampos  go to state 124
+
+
+State 84
+
+   38 defTipo: expresionT . operadorSubRango expresionT
+
+    operadorSubRango  shift, and go to state 125
+
+
+State 85
+
+   18 listaDefsTipo: identificador operadorIgual defTipo . operadorPuntoComa listaDefsTipo
+
+    operadorPuntoComa  shift, and go to state 126
+
+
+State 86
+
+   45 listaId: identificador operadorComa . listaId
+
+    identificador  shift, and go to state 34
+
+    listaId  go to state 127
+
+
+State 87
+
+   46 listaId: identificador operadorDefinicionTipo . defTipo
+
+    identificador    shift, and go to state 73
+    literalEntero    shift, and go to state 74
+    literalCaracter  shift, and go to state 75
+    booleano         shift, and go to state 76
+    cadena           shift, and go to state 77
+    caracter         shift, and go to state 78
+    entero           shift, and go to state 79
+    real             shift, and go to state 80
+    ref              shift, and go to state 81
+    tabla            shift, and go to state 82
+    tupla            shift, and go to state 83
+
+    expresionT  go to state 84
+    defTipo     go to state 128
+
+
+State 88
+
+   17 definicionVar: var listaDefsVariables fvar .
+
+    $default  reduce using rule 17 (definicionVar)
+
+
+State 89
+
+   33 listaDefsVariables: listaId operadorPuntoComa . listaDefsVariables
+
+    identificador  shift, and go to state 34
+
+    $default  reduce using rule 34 (listaDefsVariables)
+
+    listaDefsVariables  go to state 129
+    listaId             go to state 36
+
+
+State 90
+
+  108 llamadaAccion: identificador operadorInicioParentesis . parametrosReales operadorFinParentesis
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    $default  reduce using rule 112 (parametrosReales)
+
+    literalNumerico   go to state 101
+    expresion         go to state 130
+    expArit           go to state 103
+    operando          go to state 104
+    expBool           go to state 105
+    llamadaFuncion    go to state 106
+    parametrosReales  go to state 131
+
+
+State 91
+
+   96 itCotaVariable: mientras M . expresion hacer M instrucciones fmientras
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 132
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 92
+
+   97 itCotaFija: para identificador . operadorAsignar expresion hasta expresion hacer instrucciones fpara
+
+    operadorAsignar  shift, and go to state 133
+
+
+State 93
+
+   66 operando: identificador .
+  109 llamadaFuncion: identificador . operadorInicioParentesis parametrosReales operadorFinParentesis
+
+    operadorInicioParentesis  shift, and go to state 134
+
+    $default  reduce using rule 66 (operando)
+
+
+State 94
+
+   29 literalNumerico: literalEntero .
+
+    $default  reduce using rule 29 (literalNumerico)
+
+
+State 95
+
+   73 expBool: literalBooleano .
+
+    $default  reduce using rule 73 (expBool)
+
+
+State 96
+
+   30 literalNumerico: literalReal .
+
+    $default  reduce using rule 30 (literalNumerico)
+
+
+State 97
+
+   72 expBool: no . expBool
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 135
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 136
+    llamadaFuncion   go to state 106
+
+
+State 98
+
+   61 expArit: operadorInicioParentesis . expArit operadorFinParentesis
+   75 expBool: operadorInicioParentesis . expBool operadorFinParentesis
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 135
+    expArit          go to state 137
+    operando         go to state 104
+    expBool          go to state 138
+    llamadaFuncion   go to state 106
+
+
+State 99
+
+   64 expArit: operadorMas . expArit
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 141
+    operando         go to state 104
+
+
+State 100
+
+   63 expArit: operadorMenos . expArit
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 142
+    operando         go to state 104
+
+
+State 101
+
+   65 expArit: literalNumerico .
+
+    $default  reduce using rule 65 (expArit)
+
+
+State 102
+
+   74 expBool: expresion . oprel expresion
+   90 alternativa: si expresion . operadorEntonces M instrucciones N listaOpciones fsi
+   91            | si expresion . operadorEntonces M instrucciones fsi
+
+    operadorEntonces    shift, and go to state 143
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    oprel  go to state 150
+
+
+State 103
+
+   52 expresion: expArit .
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+
+    divv             shift, and go to state 151
+    mod              shift, and go to state 152
+    operadorMas      shift, and go to state 153
+    operadorPor      shift, and go to state 154
+    operadorDivisor  shift, and go to state 155
+    operadorMenos    shift, and go to state 156
+
+    $default  reduce using rule 52 (expresion)
+
+
+State 104
+
+   62 expArit: operando .
+   67 operando: operando . operadorPunto operando
+   68         | operando . operadorInicioArray expresion operadorFinArray
+   69         | operando . ref
+
+    ref                  shift, and go to state 107
+    operadorInicioArray  shift, and go to state 109
+    operadorPunto        shift, and go to state 110
+
+    $default  reduce using rule 62 (expArit)
+
+
+State 105
+
+   53 expresion: expBool .
+   70 expBool: expBool . y M expBool
+   71        | expBool . o M expBool
+
+    o  shift, and go to state 157
+    y  shift, and go to state 158
+
+    o         [reduce using rule 53 (expresion)]
+    y         [reduce using rule 53 (expresion)]
+    $default  reduce using rule 53 (expresion)
+
+
+State 106
+
+   54 expresion: llamadaFuncion .
+
+    $default  reduce using rule 54 (expresion)
+
+
+State 107
+
+   69 operando: operando ref .
+
+    $default  reduce using rule 69 (operando)
+
+
+State 108
+
+   89 asignacion: operando operadorAsignar . expresion
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 159
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 109
+
+   68 operando: operando operadorInicioArray . expresion operadorFinArray
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 160
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 110
+
+   67 operando: operando operadorPunto . operando
+
+    identificador  shift, and go to state 139
+
+    operando  go to state 161
+
+
+State 111
+
+   82 instrucciones: instruccion operadorPuntoComa . instrucciones
+
+    identificador  shift, and go to state 39
+    continuar      shift, and go to state 40
+    mientras       shift, and go to state 41
+    para           shift, and go to state 42
+    si             shift, and go to state 43
+
+    operando        go to state 44
+    instrucciones   go to state 162
+    instruccion     go to state 46
+    asignacion      go to state 47
+    alternativa     go to state 48
+    iteracion       go to state 49
+    itCotaVariable  go to state 50
+    itCotaFija      go to state 51
+    llamadaAccion   go to state 52
+
+
+State 112
+
+  100 cabeceraAccion: identificador operadorInicioParentesis . defParForm operadorFinParentesis operadorPuntoComa
+
+    ent  shift, and go to state 163
+    es   shift, and go to state 164
+    sal  shift, and go to state 165
+
+    $default  reduce using rule 104 (defParForm)
+
+    defParForm  go to state 166
+    dParForm    go to state 167
+
+
+State 113
+
+   98 defAccion: accion cabeceraAccion bloque . faccion
+
+    faccion  shift, and go to state 168
+
+
+State 114
+
+  101 cabeceraFuncion: identificador operadorInicioParentesis . listaDefsVariables operadorFinParentesis dev tipoBase operadorPuntoComa
+
+    identificador  shift, and go to state 34
+
+    $default  reduce using rule 34 (listaDefsVariables)
+
+    listaDefsVariables  go to state 169
+    listaId             go to state 36
+
+
+State 115
+
+   99 defFuncion_d: funcion cabeceraFuncion bloque . dev expresion ffuncion
+
+    dev  shift, and go to state 170
+
+
+State 116
+
+   50 defEntrada: ent listaDefsVariables .
+
+    $default  reduce using rule 50 (defEntrada)
+
+
+State 117
+
+   51 defSalida: sal listaDefsVariables .
+
+    $default  reduce using rule 51 (defSalida)
+
+
+State 118
+
+    2 cabeceraAlgoritmo: defGlobales defAccionesFunciones defVariablesInteraccion comentario .
+
+    $default  reduce using rule 2 (cabeceraAlgoritmo)
+
+
+State 119
+
+   48 defVariablesInteraccion: defEntrada defSalida .
+
+    $default  reduce using rule 48 (defVariablesInteraccion)
+
+
+State 120
+
+   31 listaDefsConstantes: identificador operadorIgual literal operadorPuntoComa . listaDefsConstantes
+
+    identificador  shift, and go to state 12
+
+    $default  reduce using rule 32 (listaDefsConstantes)
+
+    listaDefsConstantes  go to state 171
+
+
+State 121
+
+   39 defTipo: ref defTipo .
+
+    $default  reduce using rule 39 (defTipo)
+
+
+State 122
+
+   36 defTipo: tabla operadorInicioArray . expresionT operadorSubRango expresionT operadorFinArray de defTipo
+
+    literalEntero    shift, and go to state 74
+    literalCaracter  shift, and go to state 75
+
+    expresionT  go to state 172
+
+
+State 123
+
+   22 listaCampos: identificador . operadorDefinicionTipo defTipo operadorPuntoComa listaCampos
+
+    operadorDefinicionTipo  shift, and go to state 173
+
+
+State 124
+
+   35 defTipo: tupla listaCampos . ftupla
+
+    ftupla  shift, and go to state 174
+
+
+State 125
+
+   38 defTipo: expresionT operadorSubRango . expresionT
+
+    literalEntero    shift, and go to state 74
+    literalCaracter  shift, and go to state 75
+
+    expresionT  go to state 175
+
+
+State 126
+
+   18 listaDefsTipo: identificador operadorIgual defTipo operadorPuntoComa . listaDefsTipo
+
+    identificador  shift, and go to state 14
+
+    $default  reduce using rule 19 (listaDefsTipo)
+
+    listaDefsTipo  go to state 176
+
+
+State 127
+
+   45 listaId: identificador operadorComa listaId .
+
+    $default  reduce using rule 45 (listaId)
+
+
+State 128
+
+   46 listaId: identificador operadorDefinicionTipo defTipo .
+
+    $default  reduce using rule 46 (listaId)
+
+
+State 129
+
+   33 listaDefsVariables: listaId operadorPuntoComa listaDefsVariables .
+
+    $default  reduce using rule 33 (listaDefsVariables)
+
+
+State 130
+
+   74 expBool: expresion . oprel expresion
+  110 parametrosReales: expresion . operadorComa parametrosReales
+  111                 | expresion .
+
+    operadorComa        shift, and go to state 177
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    $default  reduce using rule 111 (parametrosReales)
+
+    oprel  go to state 150
+
+
+State 131
+
+  108 llamadaAccion: identificador operadorInicioParentesis parametrosReales . operadorFinParentesis
+
+    operadorFinParentesis  shift, and go to state 178
+
+
+State 132
+
+   74 expBool: expresion . oprel expresion
+   96 itCotaVariable: mientras M expresion . hacer M instrucciones fmientras
+
+    hacer               shift, and go to state 179
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    oprel  go to state 150
+
+
+State 133
+
+   97 itCotaFija: para identificador operadorAsignar . expresion hasta expresion hacer instrucciones fpara
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 180
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 134
+
+  109 llamadaFuncion: identificador operadorInicioParentesis . parametrosReales operadorFinParentesis
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    $default  reduce using rule 112 (parametrosReales)
+
+    literalNumerico   go to state 101
+    expresion         go to state 130
+    expArit           go to state 103
+    operando          go to state 104
+    expBool           go to state 105
+    llamadaFuncion    go to state 106
+    parametrosReales  go to state 181
+
+
+State 135
+
+   74 expBool: expresion . oprel expresion
+
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    oprel  go to state 150
+
+
+State 136
+
+   53 expresion: expBool .
+   70 expBool: expBool . y M expBool
+   71        | expBool . o M expBool
+   72        | no expBool .
+
+    operadorMayor       reduce using rule 53 (expresion)
+    operadorMayor       [reduce using rule 72 (expBool)]
+    operadorMenor       reduce using rule 53 (expresion)
+    operadorMenor       [reduce using rule 72 (expBool)]
+    operadorMayorIgual  reduce using rule 53 (expresion)
+    operadorMayorIgual  [reduce using rule 72 (expBool)]
+    operadorMenorIgual  reduce using rule 53 (expresion)
+    operadorMenorIgual  [reduce using rule 72 (expBool)]
+    operadorComparador  reduce using rule 53 (expresion)
+    operadorComparador  [reduce using rule 72 (expBool)]
+    operadorDistinto    reduce using rule 53 (expresion)
+    operadorDistinto    [reduce using rule 72 (expBool)]
+    $default            reduce using rule 72 (expBool)
+
+
+State 137
+
+   52 expresion: expArit .
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+   61        | operadorInicioParentesis expArit . operadorFinParentesis
+
+    divv                   shift, and go to state 151
+    mod                    shift, and go to state 152
+    operadorFinParentesis  shift, and go to state 182
+    operadorMas            shift, and go to state 153
+    operadorPor            shift, and go to state 154
+    operadorDivisor        shift, and go to state 155
+    operadorMenos          shift, and go to state 156
+
+    $default  reduce using rule 52 (expresion)
+
+
+State 138
+
+   53 expresion: expBool .
+   70 expBool: expBool . y M expBool
+   71        | expBool . o M expBool
+   75        | operadorInicioParentesis expBool . operadorFinParentesis
+
+    o                      shift, and go to state 157
+    y                      shift, and go to state 158
+    operadorFinParentesis  shift, and go to state 183
+
+    $default  reduce using rule 53 (expresion)
+
+
+State 139
+
+   66 operando: identificador .
+
+    $default  reduce using rule 66 (operando)
+
+
+State 140
+
+   61 expArit: operadorInicioParentesis . expArit operadorFinParentesis
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 184
+    operando         go to state 104
+
+
+State 141
+
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+   64        | operadorMas expArit .
+
+    $default  reduce using rule 64 (expArit)
+
+
+State 142
+
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+   63        | operadorMenos expArit .
+
+    $default  reduce using rule 63 (expArit)
+
+
+State 143
+
+   90 alternativa: si expresion operadorEntonces . M instrucciones N listaOpciones fsi
+   91            | si expresion operadorEntonces . M instrucciones fsi
+
+    $default  reduce using rule 113 (M)
+
+    M  go to state 185
+
+
+State 144
+
+   76 oprel: operadorMayor .
+
+    $default  reduce using rule 76 (oprel)
+
+
+State 145
+
+   77 oprel: operadorMenor .
+
+    $default  reduce using rule 77 (oprel)
+
+
+State 146
+
+   78 oprel: operadorMayorIgual .
+
+    $default  reduce using rule 78 (oprel)
+
+
+State 147
+
+   79 oprel: operadorMenorIgual .
+
+    $default  reduce using rule 79 (oprel)
+
+
+State 148
+
+   80 oprel: operadorComparador .
+
+    $default  reduce using rule 80 (oprel)
+
+
+State 149
+
+   81 oprel: operadorDistinto .
+
+    $default  reduce using rule 81 (oprel)
+
+
+State 150
+
+   74 expBool: expresion oprel . expresion
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 186
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 151
+
+   59 expArit: expArit divv . expArit
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 187
+    operando         go to state 104
+
+
+State 152
+
+   60 expArit: expArit mod . expArit
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 188
+    operando         go to state 104
+
+
+State 153
+
+   55 expArit: expArit operadorMas . expArit
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 189
+    operando         go to state 104
+
+
+State 154
+
+   57 expArit: expArit operadorPor . expArit
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 190
+    operando         go to state 104
+
+
+State 155
+
+   58 expArit: expArit operadorDivisor . expArit
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 191
+    operando         go to state 104
+
+
+State 156
+
+   56 expArit: expArit operadorMenos . expArit
+
+    identificador             shift, and go to state 139
+    literalEntero             shift, and go to state 94
+    literalReal               shift, and go to state 96
+    operadorInicioParentesis  shift, and go to state 140
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expArit          go to state 192
+    operando         go to state 104
+
+
+State 157
+
+   71 expBool: expBool o . M expBool
+
+    $default  reduce using rule 113 (M)
+
+    M  go to state 193
+
+
+State 158
+
+   70 expBool: expBool y . M expBool
+
+    $default  reduce using rule 113 (M)
+
+    M  go to state 194
+
+
+State 159
+
+   74 expBool: expresion . oprel expresion
+   89 asignacion: operando operadorAsignar expresion .
+
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    $default  reduce using rule 89 (asignacion)
+
+    oprel  go to state 150
+
+
+State 160
+
+   68 operando: operando operadorInicioArray expresion . operadorFinArray
+   74 expBool: expresion . oprel expresion
+
+    operadorFinArray    shift, and go to state 195
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    oprel  go to state 150
+
+
+State 161
+
+   67 operando: operando . operadorPunto operando
+   67         | operando operadorPunto operando .
+   68         | operando . operadorInicioArray expresion operadorFinArray
+   69         | operando . ref
+
+    $default  reduce using rule 67 (operando)
+
+
+State 162
+
+   82 instrucciones: instruccion operadorPuntoComa instrucciones .
+
+    $default  reduce using rule 82 (instrucciones)
+
+
+State 163
+
+  105 dParForm: ent . listaId
+
+    identificador  shift, and go to state 34
+
+    listaId  go to state 196
+
+
+State 164
+
+  107 dParForm: es . listaId
+
+    identificador  shift, and go to state 34
+
+    listaId  go to state 197
+
+
+State 165
+
+  106 dParForm: sal . listaId
+
+    identificador  shift, and go to state 34
+
+    listaId  go to state 198
+
+
+State 166
+
+  100 cabeceraAccion: identificador operadorInicioParentesis defParForm . operadorFinParentesis operadorPuntoComa
+
+    operadorFinParentesis  shift, and go to state 199
+
+
+State 167
+
+  102 defParForm: dParForm . operadorPuntoComa defParForm
+  103           | dParForm .
+
+    operadorPuntoComa  shift, and go to state 200
+
+    $default  reduce using rule 103 (defParForm)
+
+
+State 168
+
+   98 defAccion: accion cabeceraAccion bloque faccion .
+
+    $default  reduce using rule 98 (defAccion)
+
+
+State 169
+
+  101 cabeceraFuncion: identificador operadorInicioParentesis listaDefsVariables . operadorFinParentesis dev tipoBase operadorPuntoComa
+
+    operadorFinParentesis  shift, and go to state 201
+
+
+State 170
+
+   99 defFuncion_d: funcion cabeceraFuncion bloque dev . expresion ffuncion
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 202
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 171
+
+   31 listaDefsConstantes: identificador operadorIgual literal operadorPuntoComa listaDefsConstantes .
+
+    $default  reduce using rule 31 (listaDefsConstantes)
+
+
+State 172
+
+   36 defTipo: tabla operadorInicioArray expresionT . operadorSubRango expresionT operadorFinArray de defTipo
+
+    operadorSubRango  shift, and go to state 203
+
+
+State 173
+
+   22 listaCampos: identificador operadorDefinicionTipo . defTipo operadorPuntoComa listaCampos
+
+    identificador    shift, and go to state 73
+    literalEntero    shift, and go to state 74
+    literalCaracter  shift, and go to state 75
+    booleano         shift, and go to state 76
+    cadena           shift, and go to state 77
+    caracter         shift, and go to state 78
+    entero           shift, and go to state 79
+    real             shift, and go to state 80
+    ref              shift, and go to state 81
+    tabla            shift, and go to state 82
+    tupla            shift, and go to state 83
+
+    expresionT  go to state 84
+    defTipo     go to state 204
+
+
+State 174
+
+   35 defTipo: tupla listaCampos ftupla .
+
+    $default  reduce using rule 35 (defTipo)
+
+
+State 175
+
+   38 defTipo: expresionT operadorSubRango expresionT .
+
+    $default  reduce using rule 38 (defTipo)
+
+
+State 176
+
+   18 listaDefsTipo: identificador operadorIgual defTipo operadorPuntoComa listaDefsTipo .
+
+    $default  reduce using rule 18 (listaDefsTipo)
+
+
+State 177
+
+  110 parametrosReales: expresion operadorComa . parametrosReales
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    $default  reduce using rule 112 (parametrosReales)
+
+    literalNumerico   go to state 101
+    expresion         go to state 130
+    expArit           go to state 103
+    operando          go to state 104
+    expBool           go to state 105
+    llamadaFuncion    go to state 106
+    parametrosReales  go to state 205
+
+
+State 178
+
+  108 llamadaAccion: identificador operadorInicioParentesis parametrosReales operadorFinParentesis .
+
+    $default  reduce using rule 108 (llamadaAccion)
+
+
+State 179
+
+   96 itCotaVariable: mientras M expresion hacer . M instrucciones fmientras
+
+    $default  reduce using rule 113 (M)
+
+    M  go to state 206
+
+
+State 180
+
+   74 expBool: expresion . oprel expresion
+   97 itCotaFija: para identificador operadorAsignar expresion . hasta expresion hacer instrucciones fpara
+
+    hasta               shift, and go to state 207
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    oprel  go to state 150
+
+
+State 181
+
+  109 llamadaFuncion: identificador operadorInicioParentesis parametrosReales . operadorFinParentesis
+
+    operadorFinParentesis  shift, and go to state 208
+
+
+State 182
+
+   61 expArit: operadorInicioParentesis expArit operadorFinParentesis .
+
+    $default  reduce using rule 61 (expArit)
+
+
+State 183
+
+   75 expBool: operadorInicioParentesis expBool operadorFinParentesis .
+
+    $default  reduce using rule 75 (expBool)
+
+
+State 184
+
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+   61        | operadorInicioParentesis expArit . operadorFinParentesis
+
+    divv                   shift, and go to state 151
+    mod                    shift, and go to state 152
+    operadorFinParentesis  shift, and go to state 182
+    operadorMas            shift, and go to state 153
+    operadorPor            shift, and go to state 154
+    operadorDivisor        shift, and go to state 155
+    operadorMenos          shift, and go to state 156
+
+
+State 185
+
+   90 alternativa: si expresion operadorEntonces M . instrucciones N listaOpciones fsi
+   91            | si expresion operadorEntonces M . instrucciones fsi
+
+    identificador  shift, and go to state 39
+    continuar      shift, and go to state 40
+    mientras       shift, and go to state 41
+    para           shift, and go to state 42
+    si             shift, and go to state 43
+
+    operando        go to state 44
+    instrucciones   go to state 209
+    instruccion     go to state 46
+    asignacion      go to state 47
+    alternativa     go to state 48
+    iteracion       go to state 49
+    itCotaVariable  go to state 50
+    itCotaFija      go to state 51
+    llamadaAccion   go to state 52
+
+
+State 186
+
+   74 expBool: expresion . oprel expresion
+   74        | expresion oprel expresion .
+
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    operadorMayor       [reduce using rule 74 (expBool)]
+    operadorMenor       [reduce using rule 74 (expBool)]
+    operadorMayorIgual  [reduce using rule 74 (expBool)]
+    operadorMenorIgual  [reduce using rule 74 (expBool)]
+    operadorComparador  [reduce using rule 74 (expBool)]
+    operadorDistinto    [reduce using rule 74 (expBool)]
+    $default            reduce using rule 74 (expBool)
+
+    oprel  go to state 150
+
+
+State 187
+
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   59        | expArit divv expArit .
+   60        | expArit . mod expArit
+
+    $default  reduce using rule 59 (expArit)
+
+
+State 188
+
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+   60        | expArit mod expArit .
+
+    $default  reduce using rule 60 (expArit)
+
+
+State 189
+
+   55 expArit: expArit . operadorMas expArit
+   55        | expArit operadorMas expArit .
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+
+    divv             shift, and go to state 151
+    mod              shift, and go to state 152
+    operadorPor      shift, and go to state 154
+    operadorDivisor  shift, and go to state 155
+
+    $default  reduce using rule 55 (expArit)
+
+
+State 190
+
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   57        | expArit operadorPor expArit .
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+
+    $default  reduce using rule 57 (expArit)
+
+
+State 191
+
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   58        | expArit operadorDivisor expArit .
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+
+    $default  reduce using rule 58 (expArit)
+
+
+State 192
+
+   55 expArit: expArit . operadorMas expArit
+   56        | expArit . operadorMenos expArit
+   56        | expArit operadorMenos expArit .
+   57        | expArit . operadorPor expArit
+   58        | expArit . operadorDivisor expArit
+   59        | expArit . divv expArit
+   60        | expArit . mod expArit
+
+    divv             shift, and go to state 151
+    mod              shift, and go to state 152
+    operadorPor      shift, and go to state 154
+    operadorDivisor  shift, and go to state 155
+
+    $default  reduce using rule 56 (expArit)
+
+
+State 193
+
+   71 expBool: expBool o M . expBool
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 135
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 210
+    llamadaFuncion   go to state 106
+
+
+State 194
+
+   70 expBool: expBool y M . expBool
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 135
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 211
+    llamadaFuncion   go to state 106
+
+
+State 195
+
+   68 operando: operando operadorInicioArray expresion operadorFinArray .
+
+    $default  reduce using rule 68 (operando)
+
+
+State 196
+
+  105 dParForm: ent listaId .
+
+    $default  reduce using rule 105 (dParForm)
+
+
+State 197
+
+  107 dParForm: es listaId .
+
+    $default  reduce using rule 107 (dParForm)
+
+
+State 198
+
+  106 dParForm: sal listaId .
+
+    $default  reduce using rule 106 (dParForm)
+
+
+State 199
+
+  100 cabeceraAccion: identificador operadorInicioParentesis defParForm operadorFinParentesis . operadorPuntoComa
+
+    operadorPuntoComa  shift, and go to state 212
+
+
+State 200
+
+  102 defParForm: dParForm operadorPuntoComa . defParForm
+
+    ent  shift, and go to state 163
+    es   shift, and go to state 164
+    sal  shift, and go to state 165
+
+    $default  reduce using rule 104 (defParForm)
+
+    defParForm  go to state 213
+    dParForm    go to state 167
+
+
+State 201
+
+  101 cabeceraFuncion: identificador operadorInicioParentesis listaDefsVariables operadorFinParentesis . dev tipoBase operadorPuntoComa
+
+    dev  shift, and go to state 214
+
+
+State 202
+
+   74 expBool: expresion . oprel expresion
+   99 defFuncion_d: funcion cabeceraFuncion bloque dev expresion . ffuncion
+
+    ffuncion            shift, and go to state 215
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    oprel  go to state 150
+
+
+State 203
+
+   36 defTipo: tabla operadorInicioArray expresionT operadorSubRango . expresionT operadorFinArray de defTipo
+
+    literalEntero    shift, and go to state 74
+    literalCaracter  shift, and go to state 75
+
+    expresionT  go to state 216
+
+
+State 204
+
+   22 listaCampos: identificador operadorDefinicionTipo defTipo . operadorPuntoComa listaCampos
+
+    operadorPuntoComa  shift, and go to state 217
+
+
+State 205
+
+  110 parametrosReales: expresion operadorComa parametrosReales .
+
+    $default  reduce using rule 110 (parametrosReales)
+
+
+State 206
+
+   96 itCotaVariable: mientras M expresion hacer M . instrucciones fmientras
+
+    identificador  shift, and go to state 39
+    continuar      shift, and go to state 40
+    mientras       shift, and go to state 41
+    para           shift, and go to state 42
+    si             shift, and go to state 43
+
+    operando        go to state 44
+    instrucciones   go to state 218
+    instruccion     go to state 46
+    asignacion      go to state 47
+    alternativa     go to state 48
+    iteracion       go to state 49
+    itCotaVariable  go to state 50
+    itCotaFija      go to state 51
+    llamadaAccion   go to state 52
+
+
+State 207
+
+   97 itCotaFija: para identificador operadorAsignar expresion hasta . expresion hacer instrucciones fpara
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 219
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 208
+
+  109 llamadaFuncion: identificador operadorInicioParentesis parametrosReales operadorFinParentesis .
+
+    $default  reduce using rule 109 (llamadaFuncion)
+
+
+State 209
+
+   90 alternativa: si expresion operadorEntonces M instrucciones . N listaOpciones fsi
+   91            | si expresion operadorEntonces M instrucciones . fsi
+
+    fsi  shift, and go to state 220
+
+    $default  reduce using rule 114 (N)
+
+    N  go to state 221
+
+
+State 210
+
+   53 expresion: expBool .
+   70 expBool: expBool . y M expBool
+   71        | expBool . o M expBool
+   71        | expBool o M expBool .
+
+    y  shift, and go to state 158
+
+    operadorMayor       reduce using rule 53 (expresion)
+    operadorMayor       [reduce using rule 71 (expBool)]
+    operadorMenor       reduce using rule 53 (expresion)
+    operadorMenor       [reduce using rule 71 (expBool)]
+    operadorMayorIgual  reduce using rule 53 (expresion)
+    operadorMayorIgual  [reduce using rule 71 (expBool)]
+    operadorMenorIgual  reduce using rule 53 (expresion)
+    operadorMenorIgual  [reduce using rule 71 (expBool)]
+    operadorComparador  reduce using rule 53 (expresion)
+    operadorComparador  [reduce using rule 71 (expBool)]
+    operadorDistinto    reduce using rule 53 (expresion)
+    operadorDistinto    [reduce using rule 71 (expBool)]
+    $default            reduce using rule 71 (expBool)
+
+
+State 211
+
+   53 expresion: expBool .
+   70 expBool: expBool . y M expBool
+   70        | expBool y M expBool .
+   71        | expBool . o M expBool
+
+    operadorMayor       reduce using rule 53 (expresion)
+    operadorMayor       [reduce using rule 70 (expBool)]
+    operadorMenor       reduce using rule 53 (expresion)
+    operadorMenor       [reduce using rule 70 (expBool)]
+    operadorMayorIgual  reduce using rule 53 (expresion)
+    operadorMayorIgual  [reduce using rule 70 (expBool)]
+    operadorMenorIgual  reduce using rule 53 (expresion)
+    operadorMenorIgual  [reduce using rule 70 (expBool)]
+    operadorComparador  reduce using rule 53 (expresion)
+    operadorComparador  [reduce using rule 70 (expBool)]
+    operadorDistinto    reduce using rule 53 (expresion)
+    operadorDistinto    [reduce using rule 70 (expBool)]
+    $default            reduce using rule 70 (expBool)
+
+
+State 212
+
+  100 cabeceraAccion: identificador operadorInicioParentesis defParForm operadorFinParentesis operadorPuntoComa .
+
+    $default  reduce using rule 100 (cabeceraAccion)
+
+
+State 213
+
+  102 defParForm: dParForm operadorPuntoComa defParForm .
+
+    $default  reduce using rule 102 (defParForm)
+
+
+State 214
+
+  101 cabeceraFuncion: identificador operadorInicioParentesis listaDefsVariables operadorFinParentesis dev . tipoBase operadorPuntoComa
+
+    tipoBase  shift, and go to state 222
+
+
+State 215
+
+   99 defFuncion_d: funcion cabeceraFuncion bloque dev expresion ffuncion .
+
+    $default  reduce using rule 99 (defFuncion_d)
+
+
+State 216
+
+   36 defTipo: tabla operadorInicioArray expresionT operadorSubRango expresionT . operadorFinArray de defTipo
+
+    operadorFinArray  shift, and go to state 223
+
+
+State 217
+
+   22 listaCampos: identificador operadorDefinicionTipo defTipo operadorPuntoComa . listaCampos
+
+    identificador  shift, and go to state 123
+
+    $default  reduce using rule 23 (listaCampos)
+
+    listaCampos  go to state 224
+
+
+State 218
+
+   96 itCotaVariable: mientras M expresion hacer M instrucciones . fmientras
+
+    fmientras  shift, and go to state 225
+
+
+State 219
+
+   74 expBool: expresion . oprel expresion
+   97 itCotaFija: para identificador operadorAsignar expresion hasta expresion . hacer instrucciones fpara
+
+    hacer               shift, and go to state 226
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    oprel  go to state 150
+
+
+State 220
+
+   91 alternativa: si expresion operadorEntonces M instrucciones fsi .
+
+    $default  reduce using rule 91 (alternativa)
+
+
+State 221
+
+   90 alternativa: si expresion operadorEntonces M instrucciones N . listaOpciones fsi
+
+    operadorSiNoSi  shift, and go to state 227
+
+    listaOpciones  go to state 228
+
+
+State 222
+
+  101 cabeceraFuncion: identificador operadorInicioParentesis listaDefsVariables operadorFinParentesis dev tipoBase . operadorPuntoComa
+
+    operadorPuntoComa  shift, and go to state 229
+
+
+State 223
+
+   36 defTipo: tabla operadorInicioArray expresionT operadorSubRango expresionT operadorFinArray . de defTipo
+
+    de  shift, and go to state 230
+
+
+State 224
+
+   22 listaCampos: identificador operadorDefinicionTipo defTipo operadorPuntoComa listaCampos .
+
+    $default  reduce using rule 22 (listaCampos)
+
+
+State 225
+
+   96 itCotaVariable: mientras M expresion hacer M instrucciones fmientras .
+
+    $default  reduce using rule 96 (itCotaVariable)
+
+
+State 226
+
+   97 itCotaFija: para identificador operadorAsignar expresion hasta expresion hacer . instrucciones fpara
+
+    identificador  shift, and go to state 39
+    continuar      shift, and go to state 40
+    mientras       shift, and go to state 41
+    para           shift, and go to state 42
+    si             shift, and go to state 43
+
+    operando        go to state 44
+    instrucciones   go to state 231
+    instruccion     go to state 46
+    asignacion      go to state 47
+    alternativa     go to state 48
+    iteracion       go to state 49
+    itCotaVariable  go to state 50
+    itCotaFija      go to state 51
+    llamadaAccion   go to state 52
+
+
+State 227
+
+   92 listaOpciones: operadorSiNoSi . expresion operadorEntonces M instrucciones N listaOpciones
+   93              | operadorSiNoSi . expresion operadorEntonces M instrucciones
+
+    identificador             shift, and go to state 93
+    literalEntero             shift, and go to state 94
+    literalBooleano           shift, and go to state 95
+    literalReal               shift, and go to state 96
+    no                        shift, and go to state 97
+    operadorInicioParentesis  shift, and go to state 98
+    operadorMas               shift, and go to state 99
+    operadorMenos             shift, and go to state 100
+
+    literalNumerico  go to state 101
+    expresion        go to state 232
+    expArit          go to state 103
+    operando         go to state 104
+    expBool          go to state 105
+    llamadaFuncion   go to state 106
+
+
+State 228
+
+   90 alternativa: si expresion operadorEntonces M instrucciones N listaOpciones . fsi
+
+    fsi  shift, and go to state 233
+
+
+State 229
+
+  101 cabeceraFuncion: identificador operadorInicioParentesis listaDefsVariables operadorFinParentesis dev tipoBase operadorPuntoComa .
+
+    $default  reduce using rule 101 (cabeceraFuncion)
+
+
+State 230
+
+   36 defTipo: tabla operadorInicioArray expresionT operadorSubRango expresionT operadorFinArray de . defTipo
+
+    identificador    shift, and go to state 73
+    literalEntero    shift, and go to state 74
+    literalCaracter  shift, and go to state 75
+    booleano         shift, and go to state 76
+    cadena           shift, and go to state 77
+    caracter         shift, and go to state 78
+    entero           shift, and go to state 79
+    real             shift, and go to state 80
+    ref              shift, and go to state 81
+    tabla            shift, and go to state 82
+    tupla            shift, and go to state 83
+
+    expresionT  go to state 84
+    defTipo     go to state 234
+
+
+State 231
+
+   97 itCotaFija: para identificador operadorAsignar expresion hasta expresion hacer instrucciones . fpara
+
+    fpara  shift, and go to state 235
+
+
+State 232
+
+   74 expBool: expresion . oprel expresion
+   92 listaOpciones: operadorSiNoSi expresion . operadorEntonces M instrucciones N listaOpciones
+   93              | operadorSiNoSi expresion . operadorEntonces M instrucciones
+
+    operadorEntonces    shift, and go to state 236
+    operadorMayor       shift, and go to state 144
+    operadorMenor       shift, and go to state 145
+    operadorMayorIgual  shift, and go to state 146
+    operadorMenorIgual  shift, and go to state 147
+    operadorComparador  shift, and go to state 148
+    operadorDistinto    shift, and go to state 149
+
+    oprel  go to state 150
+
+
+State 233
+
+   90 alternativa: si expresion operadorEntonces M instrucciones N listaOpciones fsi .
+
+    $default  reduce using rule 90 (alternativa)
+
+
+State 234
+
+   36 defTipo: tabla operadorInicioArray expresionT operadorSubRango expresionT operadorFinArray de defTipo .
+
+    $default  reduce using rule 36 (defTipo)
+
+
+State 235
+
+   97 itCotaFija: para identificador operadorAsignar expresion hasta expresion hacer instrucciones fpara .
+
+    $default  reduce using rule 97 (itCotaFija)
+
+
+State 236
+
+   92 listaOpciones: operadorSiNoSi expresion operadorEntonces . M instrucciones N listaOpciones
+   93              | operadorSiNoSi expresion operadorEntonces . M instrucciones
+
+    $default  reduce using rule 113 (M)
+
+    M  go to state 237
+
+
+State 237
+
+   92 listaOpciones: operadorSiNoSi expresion operadorEntonces M . instrucciones N listaOpciones
+   93              | operadorSiNoSi expresion operadorEntonces M . instrucciones
+
+    identificador  shift, and go to state 39
+    continuar      shift, and go to state 40
+    mientras       shift, and go to state 41
+    para           shift, and go to state 42
+    si             shift, and go to state 43
+
+    operando        go to state 44
+    instrucciones   go to state 238
+    instruccion     go to state 46
+    asignacion      go to state 47
+    alternativa     go to state 48
+    iteracion       go to state 49
+    itCotaVariable  go to state 50
+    itCotaFija      go to state 51
+    llamadaAccion   go to state 52
+
+
+State 238
+
+   92 listaOpciones: operadorSiNoSi expresion operadorEntonces M instrucciones . N listaOpciones
+   93              | operadorSiNoSi expresion operadorEntonces M instrucciones .
+
+    operadorSiNoSi  reduce using rule 114 (N)
+    $default        reduce using rule 93 (listaOpciones)
+
+    N  go to state 239
+
+
+State 239
+
+   92 listaOpciones: operadorSiNoSi expresion operadorEntonces M instrucciones N . listaOpciones
+
+    operadorSiNoSi  shift, and go to state 227
+
+    listaOpciones  go to state 240
+
+
+State 240
+
+   92 listaOpciones: operadorSiNoSi expresion operadorEntonces M instrucciones N listaOpciones .
+
+    $default  reduce using rule 92 (listaOpciones)

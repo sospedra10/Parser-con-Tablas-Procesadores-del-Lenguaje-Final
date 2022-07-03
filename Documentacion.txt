@@ -1,0 +1,46 @@
+
+Proyecto Procesadores Del Lenguaje
+Autores: Sergio Artieda, Agustín Fernández y Javier Sospedra
+Resumen: Construcción de un compilador del lenguaje desarrollado en prácticas.
+
+Para el uso del programa, en la terminal:
+
+	1- Ejecutamos comando "make" para construir todo el compilador
+	2- Seguimos con ./a.out "nombre_fichero"  (algo1.alg, algo2.alg, algo3.alg)
+
+Nos sacará por pantalla 
+
+A continuación, se mostrarán por pantalla todos los tokens y definiciones detectadas en el programa ejecutado.
+Saldrá también cada vez que se genere una nueva operación entre variables, ya sean ariméticas o booleanas
+Se mostrarán también las tablas de símbolos y cuádruplas al final de la ejecución.
+En el archivo 'parser.output' se guardará información con las operaciones de desplazamiento y reducción utilizadas.
+
+El Scanner:
+
+ - Detecta los tokens creados en la gramática desarrollada: palabras reservadas, operadores, identificadores...
+	y se conecta con el parser para que reciba los tokens.
+
+El Parser:
+
+ - Recibe los tokens detectados por el scanner y realiza operaciones de shift y reduce. De esa manera reconoce las expresiones de
+   la gramática creada. 
+   
+ - Reconoce la estructura completa de un algoritmo completo y es capaz de diferenciar todos elementos de esta estructura.
+ 
+ - Se han definido prioridades en los tokens y en la asociatividad de los operadores aritméticos para evitar conflictos
+   de shift y reduce.
+
+ - El parser es capaz de identificar declaracion de variables, expresiones artimeticas, booleanas, asignaciones arimeticas y whiles.
+
+ - Con la tabla de símbolos reconocemos la definición de variables en el algoritmo y las almacenamos en la tabla de símbolos.
+
+ - Con la tabla de cuádruplas construimos el código el cual almacenamos en la tabla de cuádruplas.
+ 
+ - En la tabla de cuádruplas representamos las variables insertadas por su nombre, las variables temporales por t_número_variable
+  y los literales ponemos el valor que tengan.
+
+
+
+	
+
+ 
